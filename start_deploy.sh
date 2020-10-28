@@ -1,5 +1,5 @@
 while :
 do
 	pip3 install -r requirements.txt
-	python backtickbot.py
+	python3 backtickbot.py
 done
