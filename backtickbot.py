@@ -40,7 +40,7 @@ def handle_backticks(reddit: praw.Reddit, subreddit: praw.models.Subreddit, resp
 
 
         # Does it match the regex?
-        match = re.search("^`{3}[^\n`]{0,7}\n[^`]*^`{3}", comment.body)
+        match = re.search("^`{3}[^\n`]{0,7}\n[^`]*^`{3}", comment.body, re.M)
         if match:
             logger.info(f"detected match {comment.id}, attempting response")
             responded_comments.append(comment.id)
