@@ -56,7 +56,7 @@ def handle_backticks(reddit: praw.Reddit, subreddit: praw.models.Subreddit, resp
 
 
 if __name__ == "__main__":
-    logger = logging.getLogger("all")
+    logger = logging.getLogger("backtickbot")
     logger.info("startng...")
 
     with open("runtime/responses.json", 'r') as f:
