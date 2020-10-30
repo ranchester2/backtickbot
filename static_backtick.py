@@ -63,6 +63,7 @@ your codeblock/monospace text block.
 will look not as intended.
 
 You can avoid this by **indenting every line with 4 spaces instead**.
+Make sure to enter an empty line before the start of your codeblock too!
 
 Have a good day, {username}.
 
