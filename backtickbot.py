@@ -6,67 +6,53 @@ import os
 import logging
 import static_backtick
 import re
+from typing import TextIO
+import prawcore.exceptions
 
 logging.basicConfig(filename='log.log', level=logging.INFO, format='%(asctime)s %(message)s')
 
+def is_optout_attempt(comment: str, author: str, optout_accounts: list):
+    return (comment == static_backtick.opt_out_string and author not in optout_accounts)
+
+def opt_out_user(username: str, opt_out_accounts: list, opt_out_file: TextIO):
+    # some pass-by-reference magic
+    opt_out_accounts.append(username)
+    json.dump(opt_out_accounts, opt_out_file)
+
+def backtick_codeblock_used(regex: str, comment: str):
+    match = re.search(regex, comment, re.M)
+    return bool(match)
+
+def is_already_responded(comment: str, responded_comments: list):
+    return (comment in responded_comments)
+
+def is_opted_out(author: str, optout_accounts: list):
+    return (author in optout_accounts)
+
+def add_to_responded_comments(comment: str, responded_comments: list, responded_comments_file: TextIO):
+    responded_comments.append(comment)
+    json.dump(responded_comments, responded_comments_file)
+
+def is_subreddit_blacklisted(subreddit: str, blacklist: list):
+    return (subreddit in blacklist)
+
 def handle_backticks(reddit: praw.Reddit, subreddit: praw.models.Subreddit, responded_comments: list, optout_accounts: list):
     logger = logging.getLogger("backtickbot")
-    for comment in subreddit.stream.comments():
-        # Step one is test wether it is from a blacklisted subreddit
-        if comment.subreddit.display_name.lower() in static_backtick.disallowed:
-            #logger.info(f"skipping comment from subreddit {comment.subreddit.display_name.lower()}")
-            continue
-
-        # Have we already responded to the comment?
-        if comment.id in responded_comments:
-            logger.info(f"skipping already responded to comment {comment.id}")
-            continue
-
-        # Has the user opted out?
-        if comment.author.name in optout_accounts:
-            logger.info(f"skipping opted out user {comment.author.name}")
-            continue
-
-        # check if a comment is an opt out attempt
-        if comment.body == "backtickopt6":
-            if comment.author.name not in optout_accounts:
-                optout_accounts.append(comment.author.name)
-                logger.info(f"opting out user {comment.author.name}")
-                with open("runtime/optout.json", "w+") as f:
-                    json.dump(optout_accounts, f)
-                
-                comment.author.message("Opt out confirmation", static_backtick.opt_out.format(username=comment.author.name))
-                logger.info(f"sent confirmation message to {comment.author.name}")
-
-
-        # Does it match the regex?
-        match = re.search("^`{3}[^\n`]{0,7}\n[^`]*^`{3}", comment.body, re.M)
-        if match:
-            logger.info(f"detected match {comment.id}, attempting response")
-            responded_comments.append(comment.id)
-            with open("runtime/responses.json", 'w+') as f:
-                json.dump(responded_comments, f)
-            
-            try:
-                comment.reply(static_backtick.response.format(username=comment.author.name))
-            except Exception as e:
-                logger.exception(f"cannot reply {e}")
-    
 
 
 
 if __name__ == "__main__":
+    env_path = Path('.') / 'secrets' / '.env'
+    load_dotenv(dotenv_path=env_path)
+
     logger = logging.getLogger("backtickbot")
     logger.info("startng...")
 
-    with open("runtime/responses.json", 'r') as f:
+    with open(static_backtick.responded_comments_file, 'r') as f:
         responded_comments = json.load(f)
 
-    with open("runtime/optout.json", 'r') as f:
+    with open(static_backtick.opt_out_file, 'r') as f:
         optout_accounts = json.load(f)
-
-    env_path = Path('.') / 'secrets' / '.env'
-    load_dotenv(dotenv_path=env_path)
 
     reddit = praw.Reddit(
         client_id=os.environ["CLIENT_ID"],
@@ -76,6 +62,36 @@ if __name__ == "__main__":
         password=os.environ["REDDIT_PASSWORD"]
     )
 
-    subreddit = reddit.subreddit("all")
+    subreddit = reddit.subreddit(os.environ["SUBREDDIT"])
 
-    handle_backticks(reddit, subreddit, responded_comments, optout_accounts)
+    for comment in subreddit.stream.comments():
+        if is_subreddit_blacklisted(comment.subreddit.display_name.lower(), static_backtick.sub_blacklist):
+            continue
+
+        # incase of restarts this might accidently happen
+        if not is_already_responded(comment.id, responded_comments):
+            logger.info(f"skipping, already responded to comment {comment.id}")
+            continue
+
+        if is_opted_out(comment.author.name, optout_accounts):
+            logger.info(f"skipping opted out user {comment.author.name}")
+            continue
+
+        if is_optout_attempt(comment.body, comment.author.name, optout_accounts):
+            logger.info(f"opting out user {comment.author.name}")
+            with open(static_backtick.opt_out_file, 'w+') as f:
+                opt_out_user(comment.author.name, optout_accounts, f)
+            
+            comment.author.message("Opt out confirmation.", static_backtick.opt_out_confirmation_message.format(username=comment.author.name))
+            logger.info(f"sent confirmation message to {comment.author.name}")
+
+        if backtick_codeblock_used(static_backtick.detection_regex, comment.body):
+            logger.info(f"detected match {comment.id}, attempting response")
+
+            with open(static_backtick.responded_comments_file, 'w+') as f:
+                add_to_responded_comments(comment.id, responded_comments, f)
+
+            try:
+                comment.reply(static_backtick.response.format(username=comment.author.name))
+            except prawcore.exceptions.Forbidden as e:
+                logger.exception(f"banned from subreddit {comment.subreddit.display_name}, {e}")

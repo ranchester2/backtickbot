@@ -1,4 +1,4 @@
-disallowed = [
+sub_blacklist = [
     "anime", 
     "asianamerican", 
     "askhistorians", 
@@ -68,7 +68,7 @@ Have a good day, {username}.
 
 ^(You can opt out by replying with "backtickopt6" to this comment)"""
 
-opt_out = """\
+opt_out_confirmation_message = """\
 Hello, {username}. We are sorry to see you go. We hope you enjoyed your stay
 with backtickbot.
 
@@ -76,3 +76,10 @@ You have requested to opt out yourself from the backtickbot service. We have suc
 processed your order.
 
 This is a confirmation message."""
+
+opt_out_string = "backtickopt6"
+
+opt_out_file = "runtime/optout.json"
+responded_comments_file = "runtime/responses.json"
+
+detection_regex = "^`{3}[^\n`]{0,7}\n[^`]*^`{3}"
