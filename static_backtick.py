@@ -62,7 +62,9 @@ your codeblock/monospace text block.
 **This isn't universally supported on reddit**, for some users your comment
 will look not as intended.
 
-You can avoid this by **indenting every line with 4 spaces instead**.
+You can avoid this by **indenting every line with 4 spaces instead**. Another option
+is to use the "codeblock" function in the fancy-pants editor on new-Reddit: that offers a bit better
+compatibility than triple backticks.
 
 Have a good day, {username}.
 
