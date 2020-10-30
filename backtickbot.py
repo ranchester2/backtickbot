@@ -11,8 +11,8 @@ import prawcore.exceptions
 
 logging.basicConfig(filename='log.log', level=logging.INFO, format='%(asctime)s %(message)s')
 
-def is_optout_attempt(comment: str, author: str, optout_accounts: list):
-    return (comment == static_backtick.opt_out_string and author not in optout_accounts)
+def is_opt_out_attempt(comment: str, author: str, opt_out_accounts: list):
+    return (comment == static_backtick.opt_out_string and author not in opt_out_accounts)
 
 def opt_out_user(username: str, opt_out_accounts: list, opt_out_file: TextIO):
     # some pass-by-reference magic
@@ -26,8 +26,8 @@ def backtick_codeblock_used(regex: str, comment: str):
 def is_already_responded(comment: str, responded_comments: list):
     return (comment in responded_comments)
 
-def is_opted_out(author: str, optout_accounts: list):
-    return (author in optout_accounts)
+def is_opted_out(author: str, opt_out_accounts: list):
+    return (author in opt_out_accounts)
 
 def add_to_responded_comments(comment: str, responded_comments: list, responded_comments_file: TextIO):
     responded_comments.append(comment)
@@ -47,7 +47,7 @@ if __name__ == "__main__":
         responded_comments = json.load(f)
 
     with open(static_backtick.opt_out_file, 'r') as f:
-        optout_accounts = json.load(f)
+        opt_out_accounts = json.load(f)
 
     reddit = praw.Reddit(
         client_id=os.environ["CLIENT_ID"],
@@ -68,14 +68,14 @@ if __name__ == "__main__":
             logger.info(f"skipping, already responded to comment {comment.id}")
             continue
 
-        if is_opted_out(comment.author.name, optout_accounts):
+        if is_opted_out(comment.author.name, opt_out_accounts):
             logger.info(f"skipping opted out user {comment.author.name}")
             continue
 
-        if is_optout_attempt(comment.body, comment.author.name, optout_accounts):
+        if is_opt_out_attempt(comment.body, comment.author.name, opt_out_accounts):
             logger.info(f"opting out user {comment.author.name}")
             with open(static_backtick.opt_out_file, 'w+') as f:
-                opt_out_user(comment.author.name, optout_accounts, f)
+                opt_out_user(comment.author.name, opt_out_accounts, f)
             
             comment.author.message("Opt out confirmation.", static_backtick.opt_out_confirmation_message.format(username=comment.author.name))
             logger.info(f"sent confirmation message to {comment.author.name}")

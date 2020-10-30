@@ -92,10 +92,10 @@ class OptOut(unittest.TestCase):
         ]
 
     
-    def test_is_optout_attempt(self):
+    def test_is_opt_out_attempt(self):
         comment = static_backtick.opt_out_string
         self.assertTrue(
-            backtickbot.is_optout_attempt(
+            backtickbot.is_opt_out_attempt(
                 comment,
                 "amdsup",
                 self.opt_out_accounts
@@ -104,7 +104,7 @@ class OptOut(unittest.TestCase):
 
         # Valid comment, but is already in list
         self.assertFalse(
-            backtickbot.is_optout_attempt(
+            backtickbot.is_opt_out_attempt(
                 comment,
                 "Herbastko",
                 self.opt_out_accounts
@@ -114,7 +114,7 @@ class OptOut(unittest.TestCase):
         # Not valid, user not in list
         comment = "I am not trying to opt out"
         self.assertFalse(
-            backtickbot.is_optout_attempt(
+            backtickbot.is_opt_out_attempt(
                 comment,
                 "amdsup",
                 self.opt_out_accounts
