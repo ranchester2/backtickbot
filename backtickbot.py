@@ -69,7 +69,7 @@ if __name__ == "__main__":
             continue
 
         # incase of restarts this might accidently happen
-        if not is_already_responded(comment.id, responded_comments):
+        if is_already_responded(comment.id, responded_comments):
             logger.info(f"skipping, already responded to comment {comment.id}")
             continue
 
