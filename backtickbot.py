@@ -36,11 +36,6 @@ def add_to_responded_comments(comment: str, responded_comments: list, responded_
 def is_subreddit_blacklisted(subreddit: str, blacklist: list):
     return (subreddit in blacklist)
 
-def handle_backticks(reddit: praw.Reddit, subreddit: praw.models.Subreddit, responded_comments: list, optout_accounts: list):
-    logger = logging.getLogger("backtickbot")
-
-
-
 if __name__ == "__main__":
     env_path = Path('.') / 'secrets' / '.env'
     load_dotenv(dotenv_path=env_path)

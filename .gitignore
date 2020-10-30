@@ -3,3 +3,4 @@ secrets/
 .vscode/
 runtime/
 log.log
+tests/tmp
