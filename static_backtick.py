@@ -65,6 +65,10 @@ will look not as intended.
 You can avoid this by **indenting every line with 4 spaces instead**.
 Make sure to enter an empty line before the start of your codeblock too!
 
+Another option is the [new-reddit based codeblock](https://stalas.alm.lt/files/new-reddit-codeblock.png)
+that is available through the fancy-pants editor. This also offers quite
+high compatibility.
+
 Have a good day, {username}.
 
 ^(You can opt out by replying with "backtickopt6" to this comment)"""
