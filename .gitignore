@@ -4,3 +4,4 @@ secrets/
 runtime/
 log.log
 tests/tmp
+backtickbot-venv/
