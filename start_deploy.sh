@@ -1,5 +1,6 @@
 while :
 do
+	deactivate
 	git checkout deploy
 	git pull
 	rm -r backtickbot-venv
