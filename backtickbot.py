@@ -11,6 +11,31 @@ import prawcore.exceptions
 
 logging.basicConfig(filename='log.log', level=logging.INFO, format='%(asctime)s %(message)s')
 
+def convert_text_to_correct_codeblocks(regex: str, text: str):
+    """
+    Converts text to the correct formatting so that we can let users read it
+    """
+    incorrect_codeblocks = re.findall(regex, text, re.M)
+
+    correct_codeblocks = []
+
+    for codeblock in incorrect_codeblocks:
+        # Taken from stackoverflow, removes the first and last line because they are only backtick
+        codeblock = codeblock.split("\n",1)[1]
+        codeblock = "\n".join(codeblock.split("\n")[:-1])
+
+        # For it to render properly on reddit, there needs to be a line before and possibly after
+
+        codeblock = re.sub(r'^', '    ', codeblock, flags=re.M)
+        codeblock = "\n" + codeblock + "\n"
+
+        correct_codeblocks.append(codeblock)
+    
+    for index, incorrect_codeblock in enumerate(incorrect_codeblocks):
+        text = text.replace(incorrect_codeblock, correct_codeblocks[index])
+    
+    return text
+
 def is_opt_out_attempt(comment: str, author: str, opt_out_accounts: list):
     return (comment == static_backtick.opt_out_string and author not in opt_out_accounts)
 
@@ -56,6 +81,8 @@ if __name__ == "__main__":
         username=os.environ["REDDIT_USERNAME"],
         password=os.environ["REDDIT_PASSWORD"]
     )
+    
+    reddit.validate_on_submit = True
 
     subreddit = reddit.subreddit(os.environ["SUBREDDIT"])
 
@@ -87,6 +114,22 @@ if __name__ == "__main__":
                 add_to_responded_comments(comment.id, responded_comments, f)
 
             try:
-                comment.reply(static_backtick.response.format(username=comment.author.name))
+                # The post is what we will link to users so that they will know how the comment is 
+                converted = reddit.subreddit(os.environ["CONVERSIONS_SUBREDDIT"]).submit(
+                    title=f"https://reddit.com/{comment.permalink}",
+                    selftext=convert_text_to_correct_codeblocks(
+                        static_backtick.detection_regex,
+                        comment.body
+                    )
+                )
+                logger.info("succesfully posted conversion")
+
+                comment.reply(
+                    static_backtick.response.format(
+                        username=comment.author.name,
+                        url=f"https://reddit.com/{converted.permalink}"
+                    )
+                )
+                logger.info("succesfully posted response")
             except prawcore.exceptions.Forbidden as e:
                 logger.exception(f"banned from subreddit {comment.subreddit.display_name}, {e}")

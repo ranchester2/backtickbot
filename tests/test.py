@@ -154,5 +154,68 @@ class OptOut(unittest.TestCase):
             self.assertEqual(json.load(opt_out_file), self.opt_out_accounts)
 
 
+class CodeblockConverter(unittest.TestCase):
+    def test_converter_multi(self):
+        text = """\
+Hello, the solution to this problem is:
+```c
+int main()
+{
+    return 0;
+}
+```
+That is exactly why your solution of
+
+```
+int main:
+    return 0
+print(f) "Hello World"
+```
+didn't work."""
+        expected = """\
+Hello, the solution to this problem is:
+
+    int main()
+    {
+        return 0;
+    }
+
+That is exactly why your solution of
 
 
+    int main:
+        return 0
+    print(f) "Hello World"
+
+didn't work."""
+
+        self.assertEqual(
+            backtickbot.convert_text_to_correct_codeblocks(
+                static_backtick.detection_regex,
+                text
+            ),
+            expected
+        )
+    
+    def test_converter_single(self):
+        
+        text = """\
+hey
+```
+int main
+dff
+```"""
+            
+        expected = """\
+hey
+
+    int main
+    dff
+"""
+        self.assertEqual(
+            backtickbot.convert_text_to_correct_codeblocks(
+                static_backtick.detection_regex,
+                text
+            ),
+            expected
+        )
