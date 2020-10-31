@@ -9,7 +9,9 @@ import re
 from typing import TextIO
 import prawcore.exceptions
 
-logging.basicConfig(filename='log.log', level=logging.INFO, format='%(asctime)s %(message)s')
+logging.basicConfig(filename='log.log', level=logging.INFO,
+                    format='%(asctime)s %(message)s')
+
 
 def convert_text_to_correct_codeblocks(regex: str, text: str):
     """
@@ -21,7 +23,7 @@ def convert_text_to_correct_codeblocks(regex: str, text: str):
 
     for codeblock in incorrect_codeblocks:
         # Taken from stackoverflow, removes the first and last line because they are only backtick
-        codeblock = codeblock.split("\n",1)[1]
+        codeblock = codeblock.split("\n", 1)[1]
         codeblock = "\n".join(codeblock.split("\n")[:-1])
 
         # For it to render properly on reddit, there needs to be a line before and possibly after
@@ -30,39 +32,48 @@ def convert_text_to_correct_codeblocks(regex: str, text: str):
         codeblock = "\n" + codeblock + "\n"
 
         correct_codeblocks.append(codeblock)
-    
+
     for index, incorrect_codeblock in enumerate(incorrect_codeblocks):
         text = text.replace(incorrect_codeblock, correct_codeblocks[index])
-    
+
     return text
+
 
 def is_opt_out_attempt(comment: str, author: str, opt_out_accounts: list):
     return (comment == static_backtick.opt_out_string and author not in opt_out_accounts)
+
 
 def opt_out_user(username: str, opt_out_accounts: list, opt_out_file: TextIO):
     # some pass-by-reference magic
     opt_out_accounts.append(username)
     json.dump(opt_out_accounts, opt_out_file)
 
+
 def backtick_codeblock_used(regex: str, comment: str):
-    match = re.search(regex, comment, re.M)
+    match = re.search(regex, comment, flags=re.M)
     return bool(match)
+
 
 def is_already_responded(comment: str, responded_comments: list):
     return (comment in responded_comments)
 
+
 def is_opted_out(author: str, opt_out_accounts: list):
     return (author in opt_out_accounts)
+
 
 def add_to_responded_comments(comment: str, responded_comments: list, responded_comments_file: TextIO):
     responded_comments.append(comment)
     json.dump(responded_comments, responded_comments_file)
 
+
 def is_subreddit_blacklisted(subreddit: str, blacklist: list):
     return (subreddit in blacklist)
 
+
 def is_restart_request(comment: str, restart_key: str):
     return (comment == restart_key)
+
 
 if __name__ == "__main__":
     env_path = Path('.') / 'secrets' / '.env'
@@ -84,7 +95,7 @@ if __name__ == "__main__":
         username=os.environ["REDDIT_USERNAME"],
         password=os.environ["REDDIT_PASSWORD"]
     )
-    
+
     reddit.validate_on_submit = True
 
     subreddit = reddit.subreddit(os.environ["SUBREDDIT"])
@@ -99,7 +110,8 @@ if __name__ == "__main__":
             continue
 
         if is_restart_request(comment.body, os.environ["RESTART_KEY"]):
-            logger.info(f"received restart request in comment {comment.id}, restarting...")
+            logger.info(
+                f"received restart request in comment {comment.id}, restarting...")
             exit(0)
 
         if is_opted_out(comment.author.name, opt_out_accounts):
@@ -110,8 +122,9 @@ if __name__ == "__main__":
             logger.info(f"opting out user {comment.author.name}")
             with open(static_backtick.opt_out_file, 'w+') as f:
                 opt_out_user(comment.author.name, opt_out_accounts, f)
-            
-            comment.author.message("Opt out confirmation.", static_backtick.opt_out_confirmation_message.format(username=comment.author.name))
+
+            comment.author.message("Opt out confirmation.", static_backtick.opt_out_confirmation_message.format(
+                username=comment.author.name))
             logger.info(f"sent confirmation message to {comment.author.name}")
 
         if backtick_codeblock_used(static_backtick.detection_regex, comment.body):
@@ -121,7 +134,7 @@ if __name__ == "__main__":
                 add_to_responded_comments(comment.id, responded_comments, f)
 
             try:
-                # The post is what we will link to users so that they will know how the comment is 
+                # The post is what we will link to users so that they will know how the comment is
                 converted = reddit.subreddit(os.environ["CONVERSIONS_SUBREDDIT"]).submit(
                     title=f"https://reddit.com{comment.permalink}",
                     selftext=convert_text_to_correct_codeblocks(
@@ -139,4 +152,5 @@ if __name__ == "__main__":
                 )
                 logger.info("succesfully posted response")
             except prawcore.exceptions.Forbidden as e:
-                logger.exception(f"banned from subreddit {comment.subreddit.display_name}, {e}")
+                logger.exception(
+                    f"banned from subreddit {comment.subreddit.display_name}, {e}")

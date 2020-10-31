@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from dotenv import load_dotenv
 
+
 class TestDetectingMatch(unittest.TestCase):
     def check_regex(self):
         match = re.search(static_backtick.detection_regex, self.text, re.M)
@@ -72,6 +73,22 @@ That is your answer"""
             True
         )
 
+    def test_embeded_backticked_word(self):
+        text = """\
+hello
+```
+the future is something `different`
+which is what we love
+```"""
+
+        self.assertEqual(
+            backtickbot.backtick_codeblock_used(
+                static_backtick.detection_regex,
+                text
+            ),
+            True
+        )
+
 
 class SimpleFilters(unittest.TestCase):
     def test_subreddit_blacklist(self):
@@ -84,6 +101,7 @@ class SimpleFilters(unittest.TestCase):
                 True
             )
 
+
 class OptOut(unittest.TestCase):
     def setUp(self):
         self.opt_out_accounts = [
@@ -92,7 +110,6 @@ class OptOut(unittest.TestCase):
             "HTTP"
         ]
 
-    
     def test_is_opt_out_attempt(self):
         comment = static_backtick.opt_out_string
         self.assertTrue(
@@ -121,14 +138,14 @@ class OptOut(unittest.TestCase):
                 self.opt_out_accounts
             )
         )
-    
+
     def test_is_opted_out_with_not(self):
         author = "linux"
 
         self.assertFalse(
             backtickbot.is_opted_out(author, self.opt_out_accounts)
         )
-    
+
     def test_is_opted_out_with(self):
         author = "Herbastko"
 
@@ -136,21 +153,21 @@ class OptOut(unittest.TestCase):
             backtickbot.is_opted_out(author, self.opt_out_accounts)
         )
 
-    
     def test_opt_out_user(self):
         username = "loris"
         tmp_file_path = 'tests/tmp'
 
         if not os.path.exists(tmp_file_path):
             os.makedirs(tmp_file_path)
-        
+
         with open(f'{tmp_file_path}/optout.json', 'w') as opt_out_file:
             self.assertFalse(username in self.opt_out_accounts)
-            backtickbot.opt_out_user(username, self.opt_out_accounts, opt_out_file)
+            backtickbot.opt_out_user(
+                username, self.opt_out_accounts, opt_out_file)
             self.assertTrue(username in self.opt_out_accounts)
 
         # Checks if file correctly saved
-        
+
         with open(f'{tmp_file_path}/optout.json', 'r') as opt_out_file:
             self.assertEqual(json.load(opt_out_file), self.opt_out_accounts)
 
@@ -197,16 +214,15 @@ didn't work."""
             ),
             expected
         )
-    
+
     def test_converter_single(self):
-        
         text = """\
 hey
 ```
 int main
 dff
 ```"""
-            
+
         expected = """\
 hey
 
@@ -220,7 +236,30 @@ hey
             ),
             expected
         )
-    
+
+    def test_converter_embeded_backtick(self):
+        text = """\
+Yes, that
+```
+they use a thing called `private` to fix the issue,
+I don't understand it
+```"""
+        expected = """\
+Yes, that
+
+    they use a thing called `private` to fix the issue,
+    I don't understand it
+"""
+
+        self.assertEqual(
+            backtickbot.convert_text_to_correct_codeblocks(
+                static_backtick.detection_regex,
+                text
+            ),
+            expected
+        )
+
+
 class RemoteRestart(unittest.TestCase):
     def test_is_a_restart_attempt(self):
         restart_key = "redacted"
