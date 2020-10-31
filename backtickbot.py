@@ -61,6 +61,9 @@ def add_to_responded_comments(comment: str, responded_comments: list, responded_
 def is_subreddit_blacklisted(subreddit: str, blacklist: list):
     return (subreddit in blacklist)
 
+def is_restart_request(comment: str, restart_key: str):
+    return (comment == restart_key)
+
 if __name__ == "__main__":
     env_path = Path('.') / 'secrets' / '.env'
     load_dotenv(dotenv_path=env_path)
@@ -94,6 +97,10 @@ if __name__ == "__main__":
         if is_already_responded(comment.id, responded_comments):
             logger.info(f"skipping, already responded to comment {comment.id}")
             continue
+
+        if is_restart_request(comment.body, os.environ["RESTART_KEY"]):
+            logger.info(f"received restart request in comment {comment.id}, restarting...")
+            exit(0)
 
         if is_opted_out(comment.author.name, opt_out_accounts):
             logger.info(f"skipping opted out user {comment.author.name}")

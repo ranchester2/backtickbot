@@ -4,7 +4,8 @@ import re
 import static_backtick
 import backtickbot
 import json
-
+from pathlib import Path
+from dotenv import load_dotenv
 
 class TestDetectingMatch(unittest.TestCase):
     def check_regex(self):
@@ -218,4 +219,23 @@ hey
                 text
             ),
             expected
+        )
+    
+class RemoteRestart(unittest.TestCase):
+    def test_is_a_restart_attempt(self):
+        restart_key = "redacted"
+        self.assertTrue(
+            backtickbot.is_restart_request(restart_key, restart_key)
+        )
+
+        self.assertFalse(
+            backtickbot.is_restart_request("joe", restart_key)
+        )
+
+        env_path = Path('.') / 'secrets' / '.env'
+        load_dotenv(dotenv_path=env_path)
+
+        restart_key = os.environ["RESTART_KEY"]
+        self.assertTrue(
+            backtickbot.is_restart_request(restart_key, restart_key)
         )
