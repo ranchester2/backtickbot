@@ -81,6 +81,8 @@ if __name__ == "__main__":
         username=os.environ["REDDIT_USERNAME"],
         password=os.environ["REDDIT_PASSWORD"]
     )
+    
+    reddit.validate_on_submit = True
 
     subreddit = reddit.subreddit(os.environ["SUBREDDIT"])
 
@@ -112,6 +114,22 @@ if __name__ == "__main__":
                 add_to_responded_comments(comment.id, responded_comments, f)
 
             try:
-                comment.reply(static_backtick.response.format(username=comment.author.name))
+                # The post is what we will link to users so that they will know how the comment is 
+                converted = reddit.subreddit(os.environ["CONVERSIONS_SUBREDDIT"]).submit(
+                    title=f"https://reddit.com/{comment.permalink}",
+                    selftext=convert_text_to_correct_codeblocks(
+                        static_backtick.detection_regex,
+                        comment.body
+                    )
+                )
+                logger.info("succesfully posted conversion")
+
+                comment.reply(
+                    static_backtick.response.format(
+                        username=comment.author.name,
+                        url=f"https://reddit.com/{converted.permalink}"
+                    )
+                )
+                logger.info("succesfully posted response")
             except prawcore.exceptions.Forbidden as e:
                 logger.exception(f"banned from subreddit {comment.subreddit.display_name}, {e}")

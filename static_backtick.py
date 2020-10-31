@@ -65,6 +65,9 @@ will look not as intended.
 You can avoid this by **indenting every line with 4 spaces instead**.
 Make sure to enter an empty line before the start of your codeblock too!
 
+For the convenience of others, you can [view your correctly formatted
+comment/submission]({url}).
+
 Another option is the [new-reddit based codeblock](https://stalas.alm.lt/files/new-reddit-codeblock.png)
 that is available through the fancy-pants editor. This also offers quite
 high compatibility.
