@@ -1,5 +1,7 @@
 while :
 do
+	git checkout deploy
+	git pull
 	rm -r backtickbot-venv
 	python3 -m venv backtickbot-venv
 	source backtickbot-venv/bin/activate
