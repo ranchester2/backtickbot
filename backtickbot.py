@@ -11,6 +11,31 @@ import prawcore.exceptions
 
 logging.basicConfig(filename='log.log', level=logging.INFO, format='%(asctime)s %(message)s')
 
+def convert_text_to_correct_codeblocks(regex: str, text: str):
+    """
+    Converts text to the correct formatting so that we can let users read it
+    """
+    incorrect_codeblocks = re.findall(regex, text, re.M)
+
+    correct_codeblocks = []
+
+    for codeblock in incorrect_codeblocks:
+        # Taken from stackoverflow, removes the first and last line because they are only backtick
+        codeblock = codeblock.split("\n",1)[1]
+        codeblock = "\n".join(codeblock.split("\n")[:-1])
+
+        # For it to render properly on reddit, there needs to be a line before and possibly after
+
+        codeblock = re.sub(r'^', '    ', codeblock, flags=re.M)
+        codeblock = "\n" + codeblock + "\n"
+
+        correct_codeblocks.append(codeblock)
+    
+    for index, incorrect_codeblock in enumerate(incorrect_codeblocks):
+        text = text.replace(incorrect_codeblock, correct_codeblocks[index])
+    
+    return text
+
 def is_opt_out_attempt(comment: str, author: str, opt_out_accounts: list):
     return (comment == static_backtick.opt_out_string and author not in opt_out_accounts)
 
