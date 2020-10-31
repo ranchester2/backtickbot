@@ -54,6 +54,8 @@ sub_blacklist = [
 ]
 
 response = """\
+[Correctly formatted]({url})
+
 Hello, {username}. Just a quick heads up!
 
 It seems that you have attempted to use triple backticks (\`\`\`) for
@@ -63,18 +65,13 @@ your codeblock/monospace text block.
 will look not as intended.
 
 You can avoid this by **indenting every line with 4 spaces instead**.
-Make sure to enter an empty line before the start of your codeblock too!
 
-For the convenience of others, you can [view your correctly formatted
-comment/submission]({url}).
-
-Another option is the [new-reddit based codeblock](https://stalas.alm.lt/files/new-reddit-codeblock.png)
-that is available through the fancy-pants editor. This also offers quite
-high compatibility.
+There are also other methods that offer a bit better compatability like
+[the "codeblock" format feature on new Reddit](https://stalas.alm.lt/files/new-reddit-codeblock.png).
 
 Have a good day, {username}.
 
-^(You can opt out by replying with "backtickopt6" to this comment, send suggestions as messages)"""
+^(You can opt out by replying with "backtickopt6" to this comment. Or suggest something)"""
 
 opt_out_confirmation_message = """\
 Hello, {username}. We are sorry to see you go. We hope you enjoyed your stay
