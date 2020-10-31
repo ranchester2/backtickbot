@@ -1,7 +1,7 @@
 while :
 do
 	deactivate
-	git checkout deploy
+	git checkout master
 	git pull
 	rm -r backtickbot-venv
 	python3 -m venv backtickbot-venv
