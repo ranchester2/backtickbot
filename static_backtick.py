@@ -74,7 +74,7 @@ high compatibility.
 
 Have a good day, {username}.
 
-^(You can opt out by replying with "backtickopt6" to this comment)"""
+^(You can opt out by replying with "backtickopt6" to this comment, send suggestions as messages)"""
 
 opt_out_confirmation_message = """\
 Hello, {username}. We are sorry to see you go. We hope you enjoyed your stay
