@@ -116,7 +116,7 @@ if __name__ == "__main__":
             try:
                 # The post is what we will link to users so that they will know how the comment is 
                 converted = reddit.subreddit(os.environ["CONVERSIONS_SUBREDDIT"]).submit(
-                    title=f"https://reddit.com/{comment.permalink}",
+                    title=f"https://reddit.com{comment.permalink}",
                     selftext=convert_text_to_correct_codeblocks(
                         static_backtick.detection_regex,
                         comment.body
@@ -127,7 +127,7 @@ if __name__ == "__main__":
                 comment.reply(
                     static_backtick.response.format(
                         username=comment.author.name,
-                        url=f"https://reddit.com/{converted.permalink}"
+                        url=f"https://reddit.com{converted.permalink}"
                     )
                 )
                 logger.info("succesfully posted response")
