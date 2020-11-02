@@ -72,7 +72,7 @@ There are also other methods that offer a bit better compatability like
 Have a good day, {username}.
 
 ^(You can opt out by replying with "backtickopt6" to this comment. Configure to send allerts
-to PMs instead by replying with "backtickbbotdm5". Exit PMMode by sending "dmmode_end". """
+to PMs instead by replying with "backtickbbotdm5". Exit PMMode by sending "dmmode_end".)"""
 
 opt_out_confirmation_message = """\
 Hello, {username}. We are sorry to see you go. We hope you enjoyed your stay
