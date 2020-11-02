@@ -71,7 +71,8 @@ There are also other methods that offer a bit better compatability like
 
 Have a good day, {username}.
 
-^(You can opt out by replying with "backtickopt6" to this comment. Or suggest something)"""
+^(You can opt out by replying with "backtickopt6" to this comment. Configure to send allerts
+to PMs instead by replying with "backtickbbotdm5". Exit PMMode by sending "dmmode_end". """
 
 opt_out_confirmation_message = """\
 Hello, {username}. We are sorry to see you go. We hope you enjoyed your stay
@@ -82,9 +83,15 @@ processed your order.
 
 This is a confirmation message."""
 
+dmmode_confirmation_message ="""\
+Hello, {username}. This is a confirmation message that you have succesfully
+opted for getting backtick allerts through your PM's instead."""
+
 opt_out_string = "backtickopt6"
+dmmode_string = "backtickbbotdm5"
 
 opt_out_file = "runtime/optout.json"
 responded_comments_file = "runtime/responses.json"
+dmmode_file = "runtime/dmmode.json"
 
 detection_regex = "(?s)^`{3}[^\n`]{0,7}\n(?:(?!```).)+^`{3}"

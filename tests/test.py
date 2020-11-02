@@ -102,6 +102,64 @@ class SimpleFilters(unittest.TestCase):
             )
 
 
+class DmMode(unittest.TestCase):
+    def setUp(self):
+        self.dmmode_accounts = [
+            "lovestone",
+            "john",
+            "gabmus"
+        ]
+
+    def test_is_dmmode_opt_attempt_valid(self):
+        comment = static_backtick.dmmode_string
+        self.assertTrue(
+            backtickbot.is_dmmode_opt_attempt(
+                comment,
+                "valid",
+                self.dmmode_accounts
+            )
+        )
+
+    def test_is_dmmode_opt_attempt_already(self):
+        comment = static_backtick.dmmode_string
+        # Failure because already in list
+        self.assertFalse(
+            backtickbot.is_dmmode_opt_attempt(
+                comment,
+                "gabmus",
+                self.dmmode_accounts
+            )
+        )
+
+    def test_is_dmmode_opt_attempt_invalid(self):
+        comment = "something different"
+        self.assertFalse(
+            backtickbot.is_dmmode_opt_attempt(
+                comment,
+                "gabmus",
+                self.dmmode_accounts
+            )
+        )
+    
+    def test_dmmode_opt_user(self):
+        username = "loris"
+        tmp_file_path = 'tests/tmp'
+
+        if not os.path.exists(tmp_file_path):
+            os.makedirs(tmp_file_path)
+
+        with open(f'{tmp_file_path}/dmmode.json', 'w') as opt_out_file:
+            self.assertFalse(username in self.dmmode_accounts)
+            backtickbot.opt_out_user(
+                username, self.dmmode_accounts, opt_out_file)
+            self.assertTrue(username in self.dmmode_accounts)
+
+        # Checks if file correctly saved
+
+        with open(f'{tmp_file_path}/dmmode.json', 'r') as opt_out_file:
+            self.assertEqual(json.load(opt_out_file), self.dmmode_accounts)
+
+
 class OptOut(unittest.TestCase):
     def setUp(self):
         self.opt_out_accounts = [
@@ -110,7 +168,7 @@ class OptOut(unittest.TestCase):
             "HTTP"
         ]
 
-    def test_is_opt_out_attempt(self):
+    def test_is_opt_out_attempt_valid(self):
         comment = static_backtick.opt_out_string
         self.assertTrue(
             backtickbot.is_opt_out_attempt(
@@ -120,6 +178,8 @@ class OptOut(unittest.TestCase):
             )
         )
 
+    def test_is_opt_out_attempt_already(self):
+        comment = static_backtick.opt_out_string
         # Valid comment, but is already in list
         self.assertFalse(
             backtickbot.is_opt_out_attempt(
@@ -129,6 +189,7 @@ class OptOut(unittest.TestCase):
             )
         )
 
+    def test_is_opt_out_attempt_invalid(self):
         # Not valid, user not in list
         comment = "I am not trying to opt out"
         self.assertFalse(

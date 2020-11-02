@@ -43,6 +43,15 @@ def is_opt_out_attempt(comment: str, author: str, opt_out_accounts: list):
     return (comment == static_backtick.opt_out_string and author not in opt_out_accounts)
 
 
+def is_dmmode_opt_attempt(comment: str, author: str, dmmode_accounts: list):
+    return (comment == static_backtick.dmmode_string and author not in dmmode_accounts)
+
+
+def dmmode_opt_user(username: str, dmmode_accounts: list, dmmode_file: TextIO):
+    dmmode_accounts.append(username)
+    json.dump(dmmode_accounts, dmmode_file)
+
+
 def opt_out_user(username: str, opt_out_accounts: list, opt_out_file: TextIO):
     # some pass-by-reference magic
     opt_out_accounts.append(username)
@@ -60,6 +69,9 @@ def is_already_responded(comment: str, responded_comments: list):
 
 def is_opted_out(author: str, opt_out_accounts: list):
     return (author in opt_out_accounts)
+
+def is_in_dmmode(author: str, dmmode_accounts: list):
+    return (author in dmmode_accounts)
 
 
 def add_to_responded_comments(comment: str, responded_comments: list, responded_comments_file: TextIO):
@@ -87,6 +99,9 @@ if __name__ == "__main__":
 
     with open(static_backtick.opt_out_file, 'r') as f:
         opt_out_accounts = json.load(f)
+
+    with open(static_backtick.dmmode_file, 'r') as f:
+        dmmode_accounts = json.load(f)
 
     reddit = praw.Reddit(
         client_id=os.environ["CLIENT_ID"],
@@ -123,9 +138,25 @@ if __name__ == "__main__":
             with open(static_backtick.opt_out_file, 'w+') as f:
                 opt_out_user(comment.author.name, opt_out_accounts, f)
 
-            comment.author.message("Opt out confirmation.", static_backtick.opt_out_confirmation_message.format(
-                username=comment.author.name))
-            logger.info(f"sent confirmation message to {comment.author.name}")
+            comment.author.message(
+                "Opt out confirmation.",
+                static_backtick.opt_out_confirmation_message.format(
+                    username=comment.author.name
+                )
+            )
+            logger.info(f"sent opt-out confirmation message to {comment.author.name}")
+
+        if is_dmmode_opt_attempt(comment.body, comment.author.name, dmmode_accounts):
+            logger.info(f"changing user {comment.author.name} to dmmode")
+            with open(static_backtick.dmmode_file, 'w+') as f:
+                dmmode_opt_user(comment.author.name, dmmode_accounts, f)
+
+            comment.author.message(
+                "DMMode confirmation.",
+                static_backtick.dmmode_confirmation_message.format(
+                    username=comment.author.name
+                )
+            )
 
         if backtick_codeblock_used(static_backtick.detection_regex, comment.body):
             logger.info(f"detected match {comment.id}, attempting response")
@@ -144,12 +175,21 @@ if __name__ == "__main__":
                 )
                 logger.info("succesfully posted conversion")
 
-                comment.reply(
-                    static_backtick.response.format(
-                        username=comment.author.name,
-                        url=f"https://reddit.com{converted.permalink}"
+                if is_in_dmmode(comment.author.name, dmmode_accounts):
+                    comment.author.message(
+                        "Backtick format allert",
+                        static_backtick.response.format(
+                            username=comment.author.name,
+                            url=f"https://reddit.com{converted.permalink}"
+                        )
                     )
-                )
+                else:
+                    comment.reply(
+                        static_backtick.response.format(
+                            username=comment.author.name,
+                            url=f"https://reddit.com{converted.permalink}"
+                        )
+                    )
                 logger.info("succesfully posted response")
             except prawcore.exceptions.Forbidden as e:
                 logger.exception(

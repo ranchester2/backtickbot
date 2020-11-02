@@ -8,6 +8,7 @@ do
 	source backtickbot-venv/bin/activate
 	touch runtime/optout.json
 	touch runtime/responses.json
+	touch runtime/dmmode.json
 	pip3 install -r requirements.txt
 	python3 backtickbot.py
 done
