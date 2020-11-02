@@ -140,7 +140,7 @@ class DmMode(unittest.TestCase):
                 self.dmmode_accounts
             )
         )
-    
+
     def test_dmmode_opt_user(self):
         username = "loris"
         tmp_file_path = 'tests/tmp'
@@ -148,16 +148,16 @@ class DmMode(unittest.TestCase):
         if not os.path.exists(tmp_file_path):
             os.makedirs(tmp_file_path)
 
-        with open(f'{tmp_file_path}/dmmode.json', 'w') as opt_out_file:
+        with open(f'{tmp_file_path}/dmmode.json', 'w') as dmmode_file:
             self.assertFalse(username in self.dmmode_accounts)
             backtickbot.opt_out_user(
-                username, self.dmmode_accounts, opt_out_file)
+                username, self.dmmode_accounts, dmmode_file)
             self.assertTrue(username in self.dmmode_accounts)
 
         # Checks if file correctly saved
 
-        with open(f'{tmp_file_path}/dmmode.json', 'r') as opt_out_file:
-            self.assertEqual(json.load(opt_out_file), self.dmmode_accounts)
+        with open(f'{tmp_file_path}/dmmode.json', 'r') as dmmode_file:
+            self.assertEqual(json.load(dmmode_file), self.dmmode_accounts)
 
 
 class OptOut(unittest.TestCase):
@@ -339,3 +339,43 @@ class RemoteRestart(unittest.TestCase):
         self.assertTrue(
             backtickbot.is_restart_request(restart_key, restart_key)
         )
+
+
+class RespondedComments(unittest.TestCase):
+    def setUp(self):
+        self.responded_comments = [
+            "12345",
+            "23545",
+            "54321"
+        ]
+
+    def test_is_already_responded_invalid(self):
+        comment = "sdlkfjhg"
+        self.assertFalse(
+            backtickbot.is_already_responded(
+                comment,
+                self.responded_comments
+            )
+        )
+
+    def test_is_already_responded_valid(self):
+        comment = "12345"
+        self.assertTrue(
+            backtickbot.is_already_responded(
+                comment,
+                self.responded_comments
+            )
+        )
+
+    def test_add_to_responded_comments(self):
+        comment = "sdfkgjh"
+        tmp_file_path = 'tests/tmp'
+
+        with open(f'{tmp_file_path}/responses.json', 'w') as opt_out_file:
+            self.assertFalse(comment in self.responded_comments)
+            backtickbot.add_to_responded_comments(
+                comment, self.responded_comments, opt_out_file)
+            self.assertTrue(comment in self.responded_comments)
+
+        with open(f'{tmp_file_path}/responses.json', 'r') as opt_out_file:
+            self.assertEqual(json.load(opt_out_file), self.responded_comments)
