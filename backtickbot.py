@@ -86,35 +86,7 @@ def is_subreddit_blacklisted(subreddit: str, blacklist: list):
 def is_restart_request(comment: str, restart_key: str):
     return (comment == restart_key)
 
-
-if __name__ == "__main__":
-    env_path = Path('.') / 'secrets' / '.env'
-    load_dotenv(dotenv_path=env_path)
-
-    logger = logging.getLogger("backtickbot")
-    logger.info("startng...")
-
-    with open(static_backtick.responded_comments_file, 'r') as f:
-        responded_comments = json.load(f)
-
-    with open(static_backtick.opt_out_file, 'r') as f:
-        opt_out_accounts = json.load(f)
-
-    with open(static_backtick.dmmode_file, 'r') as f:
-        dmmode_accounts = json.load(f)
-
-    reddit = praw.Reddit(
-        client_id=os.environ["CLIENT_ID"],
-        client_secret=os.environ["CLIENT_SECRET"],
-        user_agent=os.environ["REDDIT_USER_AGENT"],
-        username=os.environ["REDDIT_USERNAME"],
-        password=os.environ["REDDIT_PASSWORD"]
-    )
-
-    reddit.validate_on_submit = True
-
-    subreddit = reddit.subreddit(os.environ["SUBREDDIT"])
-
+def main(subreddit, reddit, logger, responded_comments, opt_out_accounts, dmmode_accounts):
     for comment in subreddit.stream.comments():
         if is_subreddit_blacklisted(comment.subreddit.display_name.lower(), static_backtick.sub_blacklist):
             continue
@@ -194,3 +166,33 @@ if __name__ == "__main__":
             except prawcore.exceptions.Forbidden as e:
                 logger.exception(
                     f"banned from subreddit {comment.subreddit.display_name}, {e}")
+
+if __name__ == "__main__":
+    env_path = Path('.') / 'secrets' / '.env'
+    load_dotenv(dotenv_path=env_path)
+
+    logger = logging.getLogger("backtickbot")
+    logger.info("startng...")
+
+    with open(static_backtick.responded_comments_file, 'r') as f:
+        responded_comments = json.load(f)
+
+    with open(static_backtick.opt_out_file, 'r') as f:
+        opt_out_accounts = json.load(f)
+
+    with open(static_backtick.dmmode_file, 'r') as f:
+        dmmode_accounts = json.load(f)
+
+    reddit = praw.Reddit(
+        client_id=os.environ["CLIENT_ID"],
+        client_secret=os.environ["CLIENT_SECRET"],
+        user_agent=os.environ["REDDIT_USER_AGENT"],
+        username=os.environ["REDDIT_USERNAME"],
+        password=os.environ["REDDIT_PASSWORD"]
+    )
+
+    reddit.validate_on_submit = True
+
+    subreddit = reddit.subreddit(os.environ["SUBREDDIT"])
+
+    main(subreddit, reddit, logger, responded_comments, opt_out_accounts, dmmode_accounts)
