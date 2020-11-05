@@ -50,7 +50,8 @@ sub_blacklist = [
     "crucibleplaybook",
     "cassetteculture",
     "italy_SS",
-    "DimmiOuija"
+    "DimmiOuija",
+    "badcode"
 ]
 
 response = """\
