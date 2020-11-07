@@ -1,5 +1,4 @@
 #!/bin/sh
-deactivate
 git checkout master
 git pull
 rm -r backtickbot-venv
