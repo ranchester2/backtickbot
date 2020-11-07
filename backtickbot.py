@@ -9,9 +9,6 @@ import re
 from typing import TextIO
 import prawcore.exceptions
 
-logging.basicConfig(filename='log.log', level=logging.INFO,
-                    format='%(asctime)s %(message)s')
-
 
 def convert_text_to_correct_codeblocks(regex: str, text: str):
     """
@@ -170,6 +167,12 @@ def main(subreddit, reddit, logger, responded_comments, opt_out_accounts, dmmode
 if __name__ == "__main__":
     env_path = Path('.') / 'secrets' / '.env'
     load_dotenv(dotenv_path=env_path)
+    
+    logging.basicConfig(
+        filename='log.log',
+        level=logging.INFO,
+        format='%(asctime)s %(message)s'
+    )
 
     logger = logging.getLogger("backtickbot")
     logger.info("startng...")

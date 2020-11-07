@@ -1,0 +1,11 @@
+[Unit]
+Description=Backtickbot bot
+
+[Service]
+User=backtick
+WorkingDirectory=/home/backtick/backtickbot
+ExecStart=/bin/sh -c "start-scripts/prepare.sh && start-scripts/start.sh"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
