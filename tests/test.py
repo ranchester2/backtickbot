@@ -379,3 +379,16 @@ class RespondedComments(unittest.TestCase):
 
         with open(f'{tmp_file_path}/responses.json', 'r') as opt_out_file:
             self.assertEqual(json.load(opt_out_file), self.responded_comments)
+
+
+class TestUsernameEscape(unittest.TestCase):
+    def test_escape_username(self):
+        username = "_joe_jinja*lol*"
+        # Double backslash because we are fixing reddit's formatting
+        # not ours.
+        expected = "\\_joe\\_jinja\\*lol\\*"
+        self.assertEqual(
+            backtickbot.escape_username(username),
+            expected
+        )
+

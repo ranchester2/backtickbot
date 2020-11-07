@@ -9,6 +9,23 @@ import re
 from typing import TextIO
 import prawcore.exceptions
 
+def escape_username(username: str):
+    """
+    Convert the username into escaping all special
+    reddit markdown charachters for correct tagging
+    in message
+    """
+    fixed = ""
+
+    for char in username:
+        if char in ["_", "*", "`", "#"]:
+            # Double backslash because we are fixing reddit's formatting
+            # not outs
+            fixed += ("\\" + char)
+        else:
+            fixed += char
+
+    return fixed
 
 def convert_text_to_correct_codeblocks(regex: str, text: str):
     """
@@ -148,14 +165,14 @@ def main(subreddit, reddit, logger, responded_comments, opt_out_accounts, dmmode
                     comment.author.message(
                         "Backtick format allert",
                         static_backtick.response.format(
-                            username=comment.author.name,
+                            username=escape_username(comment.author.name),
                             url=f"https://reddit.com{converted.permalink}"
                         )
                     )
                 else:
                     comment.reply(
                         static_backtick.response.format(
-                            username=comment.author.name,
+                            username=escape_username(comment.author.name),
                             url=f"https://reddit.com{converted.permalink}"
                         )
                     )
