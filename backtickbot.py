@@ -169,7 +169,7 @@ if __name__ == "__main__":
     load_dotenv(dotenv_path=env_path)
     
     logging.basicConfig(
-        filename='log.log',
+        filename=os.environ["LOG_FILE"],
         level=logging.INFO,
         format='%(asctime)s %(message)s'
     )
