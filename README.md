@@ -11,4 +11,19 @@ and in it put:
 * `responses.json` - content should be `[]`
 * `optout.json` - content should be `[]`
 
-Have python, etc installed. Run `start_deploy.sh`
+Install systemd service located in data/, setup user, etc, start it.
+Or just install requirements.txt and run backtickbot.py
+
+You also need a .env file in secrets/.env
+
+```sh
+CLIENT_ID=<your client id>
+CLIENT_SECRET=<your client secret>
+REDDIT_USER_AGENT=<your useragent>
+REDDIT_USERNAME=<your reddit username>
+REDDIT_PASSWORD=<your reddit passwd>
+SUBREDDIT=<what subreddit will it run on>
+CONVERSIONS_SUBREDDIT=<to what subreddit will the conversion posts be posted on>
+RESTART_KEY=<string used to restart the bot remotely>
+LOG_FILE=<where the log file will be>
+```
