@@ -71,7 +71,7 @@ There are also other methods that offer a bit better compatability like
 [the "codeblock" format feature on new Reddit](https://stalas.alm.lt/files/new-reddit-codeblock.png).
 
 Tip: in new reddit, changing to "fancy-pants" editor and changing back to "markdown" will reformat correctly!
-However, that may be unnaceptable to you.
+However, that may be unnacceptable to you.
 
 Have a good day, {username}.
 
