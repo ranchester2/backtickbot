@@ -8,8 +8,10 @@ import static_backtick
 import re
 from typing import TextIO
 import prawcore.exceptions
+import praw.models
 
-def escape_username(username: str):
+
+def escape_username(username: str) -> str:
     """
     Convert the username into escaping all special
     reddit markdown charachters for correct tagging
@@ -27,7 +29,23 @@ def escape_username(username: str):
 
     return fixed
 
-def convert_text_to_correct_codeblocks(regex: str, text: str):
+
+def gen_old_webpage(comment_html: str, comment_id):
+    """
+    Generates an html file of how the comment
+    would look like on old reddit
+    """
+    with open("data/comment_template.html", "r") as f:
+        template = f.read()
+    template = template.replace("<body></body>", f"<body>{comment_html}</body>")
+    with open(Path(os.environ["PREVIEW_STORAGE_URL"]) / (comment_id + ".html"), "w") as f:
+        f.write(template)
+
+def capture_preview(preview_url: str, comment_id: str):
+    os.system(f"firefox-esr --screenshot /var/www/backformat/{comment_id}.png {preview_url}")
+
+
+def convert_text_to_correct_codeblocks(regex: str, text: str) -> str:
     """
     Converts text to the correct formatting so that we can let users read it
     """
@@ -53,11 +71,11 @@ def convert_text_to_correct_codeblocks(regex: str, text: str):
     return text
 
 
-def is_opt_out_attempt(comment: str, author: str, opt_out_accounts: list):
+def is_opt_out_attempt(comment: str, author: str, opt_out_accounts: list) -> bool:
     return (comment == static_backtick.opt_out_string and author not in opt_out_accounts)
 
 
-def is_dmmode_opt_attempt(comment: str, author: str, dmmode_accounts: list):
+def is_dmmode_opt_attempt(comment: str, author: str, dmmode_accounts: list) -> bool:
     return (comment == static_backtick.dmmode_string and author not in dmmode_accounts)
 
 
@@ -72,19 +90,20 @@ def opt_out_user(username: str, opt_out_accounts: list, opt_out_file: TextIO):
     json.dump(opt_out_accounts, opt_out_file)
 
 
-def backtick_codeblock_used(regex: str, comment: str):
+def backtick_codeblock_used(regex: str, comment: str) -> bool:
     match = re.search(regex, comment, flags=re.M)
     return bool(match)
 
 
-def is_already_responded(comment: str, responded_comments: list):
+def is_already_responded(comment: str, responded_comments: list) -> bool:
     return (comment in responded_comments)
 
 
-def is_opted_out(author: str, opt_out_accounts: list):
+def is_opted_out(author: str, opt_out_accounts: list) -> bool:
     return (author in opt_out_accounts)
 
-def is_in_dmmode(author: str, dmmode_accounts: list):
+
+def is_in_dmmode(author: str, dmmode_accounts: list) -> bool:
     return (author in dmmode_accounts)
 
 
@@ -93,14 +112,15 @@ def add_to_responded_comments(comment: str, responded_comments: list, responded_
     json.dump(responded_comments, responded_comments_file)
 
 
-def is_subreddit_blacklisted(subreddit: str, blacklist: list):
+def is_subreddit_blacklisted(subreddit: str, blacklist: list) -> bool:
     return (subreddit in blacklist)
 
 
-def is_restart_request(comment: str, restart_key: str):
+def is_restart_request(comment: str, restart_key: str) -> bool:
     return (comment == restart_key)
 
-def main(subreddit, reddit, logger, responded_comments, opt_out_accounts, dmmode_accounts):
+
+def main(subreddit: praw.models.Subreddit, reddit: praw.Reddit, logger, responded_comments: list, opt_out_accounts: list, dmmode_accounts: list):
     for comment in subreddit.stream.comments():
         if is_subreddit_blacklisted(comment.subreddit.display_name.lower(), static_backtick.sub_blacklist):
             continue
@@ -130,7 +150,8 @@ def main(subreddit, reddit, logger, responded_comments, opt_out_accounts, dmmode
                     username=comment.author.name
                 )
             )
-            logger.info(f"sent opt-out confirmation message to {comment.author.name}")
+            logger.info(
+                f"sent opt-out confirmation message to {comment.author.name}")
 
         if is_dmmode_opt_attempt(comment.body, comment.author.name, dmmode_accounts):
             logger.info(f"changing user {comment.author.name} to dmmode")
@@ -151,6 +172,9 @@ def main(subreddit, reddit, logger, responded_comments, opt_out_accounts, dmmode
                 add_to_responded_comments(comment.id, responded_comments, f)
 
             try:
+                gen_old_webpage(comment.body_html, comment.id)
+                logger.info("succesfully generated and saved old reddit preview")
+
                 # The post is what we will link to users so that they will know how the comment is
                 converted = reddit.subreddit(os.environ["CONVERSIONS_SUBREDDIT"]).submit(
                     title=f"https://reddit.com{comment.permalink}",
@@ -161,19 +185,30 @@ def main(subreddit, reddit, logger, responded_comments, opt_out_accounts, dmmode
                 )
                 logger.info("succesfully posted conversion")
 
+                capture_preview(f"{os.environ['PREVIEW_STORAGE_URL']}{comment.id}{'.html'}", comment.id)
+                logger.info("succesfully captured incorrect preview")
+
                 if is_in_dmmode(comment.author.name, dmmode_accounts):
                     comment.author.message(
                         "Backtick format allert",
                         static_backtick.response.format(
                             username=escape_username(comment.author.name),
-                            url=f"https://reddit.com{converted.permalink}"
+                            fixed_url=f"https://reddit.com{converted.permalink}",
+                            incorrect_screenshot=f"{os.environ['PREVIEW_STORAGE_URL']}{comment.id}{'.png'}",
+                            incorrect_link=f"{os.environ['PREVIEW_STORAGE_URL']}{comment.id}{'.html'}",
+                            codeblock_url=static_backtick.new_reddit_codeblock_url,
+                            opt_out_message=static_backtick.opt_out_string
                         )
                     )
                 else:
                     comment.reply(
                         static_backtick.response.format(
                             username=escape_username(comment.author.name),
-                            url=f"https://reddit.com{converted.permalink}"
+                            fixed_url=f"https://reddit.com{converted.permalink}",
+                            incorrect_screenshot=f"{os.environ['PREVIEW_STORAGE_URL']}{comment.id}{'.png'}",
+                            incorrect_link=f"{os.environ['PREVIEW_STORAGE_URL']}{comment.id}{'.html'}",
+                            codeblock_url=static_backtick.new_reddit_codeblock_url,
+                            opt_out_message=static_backtick.opt_out_string
                         )
                     )
                 logger.info("succesfully posted response")
@@ -181,10 +216,11 @@ def main(subreddit, reddit, logger, responded_comments, opt_out_accounts, dmmode
                 logger.exception(
                     f"banned from subreddit {comment.subreddit.display_name}, {e}")
 
+
 if __name__ == "__main__":
     env_path = Path('.') / 'secrets' / '.env'
     load_dotenv(dotenv_path=env_path)
-    
+
     logging.basicConfig(
         filename=os.environ["LOG_FILE"],
         level=logging.INFO,
@@ -215,4 +251,5 @@ if __name__ == "__main__":
 
     subreddit = reddit.subreddit(os.environ["SUBREDDIT"])
 
-    main(subreddit, reddit, logger, responded_comments, opt_out_accounts, dmmode_accounts)
+    main(subreddit, reddit, logger, responded_comments,
+         opt_out_accounts, dmmode_accounts)

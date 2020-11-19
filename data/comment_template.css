@@ -1,0 +1,375 @@
+html,
+body {
+  height: 100%;
+}
+
+html {
+  display: table;
+  margin: auto;
+}
+
+body {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+em {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  color: #222222;
+  word-wrap: break-word;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  margin-left: 0;
+  margin-right: 0;
+  font-style: italic;
+  font-weight: inherit;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+strong {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  color: #222222;
+  word-wrap: break-word;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: 600;
+  font-style: inherit;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+strong em {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  color: #222222;
+  word-wrap: break-word;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  margin-left: 0;
+  margin-right: 0;
+  font-style: italic;
+  font-weight: inherit;
+}
+
+del {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  word-wrap: break-word;
+  font-weight: 400;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  margin-left: 0;
+  margin-right: 0;
+  color: #4f4f4f;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+sup {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  color: #222222;
+  word-wrap: break-word;
+  font-weight: 400;
+  border-collapse: collapse;
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+  font-size: 0.86em;
+  line-height: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+blockquote {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  word-wrap: break-word;
+  font-weight: 400;
+  font-size: 1.0769230769230769em;
+  color: #4f4f4f;
+  margin: 0;
+  border-left: 2px solid #c5c1ad;
+  padding: 0 8px;
+  margin-left: 5px;
+  margin-top: 0.35714285714285715em;
+  margin-bottom: 0.7142857142857143em;
+}
+
+.md-spoiler-text {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  word-wrap: break-word;
+  font-weight: 400;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  margin-left: 0;
+  margin-right: 0;
+  border-radius: 2px;
+  transition: background ease-out 1s;
+  margin-top: 0;
+  margin-bottom: 0;
+  background: #4f4f4f;
+  cursor: pointer;
+  color: transparent;
+}
+
+code {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  color: #222222;
+  word-wrap: break-word;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  font-family: monospace, monospace;
+  font-style: normal;
+  font-weight: normal;
+  border: 1px solid #e6e6de;
+  background-color: #fcfcfb;
+  border-radius: 2px;
+  margin: 0 2px;
+  white-space: nowrap;
+  word-break: normal;
+  padding: 0 4px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+a {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  word-wrap: break-word;
+  font-weight: 400;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  margin-left: 0;
+  margin-right: 0;
+  color: #0079d3;
+  text-decoration: none;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+h1 {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  list-style-type: none;
+  word-wrap: break-word;
+  border: 0;
+  color: inherit;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 600;
+  font-style: inherit;
+  margin: 0;
+  padding: 0;
+  font-size: 1.2857142857142858em;
+  line-height: 1.3888888888888888em;
+  margin-top: 0.8333333333333334em;
+  margin-bottom: 0.8333333333333334em;
+}
+
+h2 {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  list-style-type: none;
+  word-wrap: break-word;
+  border: 0;
+  color: inherit;
+  -webkit-font-smoothing: antialiased;
+  font-style: inherit;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+  font-size: 1.2857142857142858em;
+  line-height: 1.3888888888888888em;
+  margin-top: 0.8333333333333334em;
+  margin-bottom: 0.8333333333333334em;
+}
+
+h3 {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  list-style-type: none;
+  word-wrap: break-word;
+  border: 0;
+  color: inherit;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 600;
+  font-style: inherit;
+  margin: 0;
+  padding: 0;
+  font-size: 1.1428571428571428em;
+  line-height: 1.25em;
+  margin-top: 0.625em;
+  margin-bottom: 0.625em;
+}
+
+h4 {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  list-style-type: none;
+  word-wrap: break-word;
+  border: 0;
+  color: inherit;
+  -webkit-font-smoothing: antialiased;
+  font-style: inherit;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+  font-size: 1.1428571428571428em;
+  line-height: 1.25em;
+  margin-top: 0.625em;
+  margin-bottom: 0.625em;
+}
+
+h5 {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  list-style-type: none;
+  word-wrap: break-word;
+  border: 0;
+  color: inherit;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 600;
+  font-style: inherit;
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  margin-top: 0.7142857142857143em;
+  margin-bottom: 0.35714285714285715em;
+}
+
+h6 {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  list-style-type: none;
+  word-wrap: break-word;
+  border: 0;
+  color: inherit;
+  -webkit-font-smoothing: antialiased;
+  text-decoration: underline;
+  font-style: inherit;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  margin-top: 0.7142857142857143em;
+  margin-bottom: 0;
+}
+
+ul {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  word-wrap: break-word;
+  font-weight: 400;
+  font-size: 1.0769230769230769em;
+  color: #4f4f4f;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  list-style-type: disc;
+  padding-left: 40px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+li {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  word-wrap: break-word;
+  font-weight: 400;
+  color: #4f4f4f;
+  list-style: none;
+  list-style-type: disc;
+  margin: 0;
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  margin-top: 0;
+}
+
+th {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  word-wrap: break-word;
+  color: #4f4f4f;
+  border-collapse: collapse;
+  font-weight: 600;
+  font-style: inherit;
+  margin: 0;
+  border: 1px solid #e5e3da;
+  padding: 4px 9px;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  text-align: right;
+}
+
+td {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  word-wrap: break-word;
+  font-weight: 400;
+  color: #4f4f4f;
+  border-collapse: collapse;
+  margin: 0;
+  border: 1px solid #e5e3da;
+  padding: 4px 9px;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  text-align: center;
+}
+
+pre code {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  word-wrap: break-word;
+  color: #4f4f4f;
+  font-family: monospace, monospace;
+  font-style: normal;
+  font-weight: normal;
+  border-radius: 2px;
+  margin: 0 2px;
+  word-break: normal;
+  white-space: pre;
+  background-color: transparent;
+  border: 0;
+  display: block;
+  padding: 0 !important;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+pre {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  word-wrap: break-word;
+  font-weight: 400;
+  font-size: 1.0769230769230769em;
+  color: #4f4f4f;
+  margin: 0;
+  border: 1px solid #e6e6de;
+  background-color: #fcfcfb;
+  border-radius: 2px;
+  overflow: auto;
+  padding: 4px 9px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+p {
+  font: normal x-small verdana, arial, helvetica, sans-serif;
+  list-style-type: none;
+  color: #222222;
+  word-wrap: break-word;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 0.35714285714285715em;
+  font-size: 1em;
+  line-height: 1.4285714285714286em;
+  margin-top: 0;
+}

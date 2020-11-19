@@ -26,4 +26,6 @@ SUBREDDIT=<what subreddit will it run on>
 CONVERSIONS_SUBREDDIT=<to what subreddit will the conversion posts be posted on>
 RESTART_KEY=<string used to restart the bot remotely>
 LOG_FILE=<where the log file will be>
+SERVER_STORAGE_LOCATION=<writable storage that shows up in url>
+PREVIEW_STORAGE_URL=<basically previous but web url>
 ```

@@ -54,29 +54,20 @@ sub_blacklist = [
     "badcode"
 ]
 
-response = """\
-[Correctly formatted]({url})
+new_reddit_codeblock_url = "https://stalas.alm.lt/files/new-reddit-codeblock.png"
 
-Hello, {username}. Just a quick heads up!
+respnse = """\
+Hello, {username}: code blocks using backticks (\`\`\`) don't work on all versions of Reddit!
+Some users see [this]({incorrect_screenshot}) / [this]({incorrect_link}) instead.
 
-It seems that you have attempted to use triple backticks (\`\`\`) for
-your codeblock/monospace text block.
+To fix this, you need to start every line in your code block with at least four spaces. It's a bit annoying, but means your code blocks are properly formatted for everyone.
+An easy way to do this is to use the code-block button in the editor: {codeblock_url}. If it's not working, try switching to the fancy-pants editor and back again.
 
-**This isn't universally supported on reddit**, for some users your comment
-will look not as intended.
+[Comment with formatting fixed for old.reddit.com users]({fixed_url})
 
-You can avoid this by **indenting every line with 4 spaces instead**.
+[FAQ](https://www.reddit.com/r/backtickbot/wiki/index)
 
-There are also other methods that offer a bit better compatability like
-[the "codeblock" format feature on new Reddit](https://stalas.alm.lt/files/new-reddit-codeblock.png).
-
-Tip: in new reddit, changing to "fancy-pants" editor and changing back to "markdown" will reformat correctly!
-However, that may be unnacceptable to you.
-
-Have a good day, {username}.
-
-^(You can opt out by replying with "backtickopt6" to this comment. Configure to send allerts
-to PMs instead by replying with "backtickbbotdm5". Exit PMMode by sending "dmmode_end".)"""
+^(You can opt out by replying with {opt_out_message} to this comment.)"""
 
 opt_out_confirmation_message = """\
 Hello, {username}. We are sorry to see you go. We hope you enjoyed your stay
@@ -92,7 +83,7 @@ Hello, {username}. This is a confirmation message that you have succesfully
 opted for getting backtick allerts through your PM's instead."""
 
 opt_out_string = "backtickopt6"
-dmmode_string = "backtickbbotdm5"
+dmmode_string = "backtickbotdm5"
 
 opt_out_file = "runtime/optout.json"
 responded_comments_file = "runtime/responses.json"
