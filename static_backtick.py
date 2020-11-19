@@ -56,7 +56,7 @@ sub_blacklist = [
 
 new_reddit_codeblock_url = "https://stalas.alm.lt/files/new-reddit-codeblock.png"
 
-respnse = """\
+response = """\
 Hello, {username}: code blocks using backticks (\`\`\`) don't work on all versions of Reddit!
 Some users see [this]({incorrect_screenshot}) / [this]({incorrect_link}) instead.
 
