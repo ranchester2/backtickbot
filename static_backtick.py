@@ -89,4 +89,4 @@ opt_out_file = "runtime/optout.json"
 responded_comments_file = "runtime/responses.json"
 dmmode_file = "runtime/dmmode.json"
 
-detection_regex = "(?s)^`{3}[^\n`]{0,7}\n(?:(?!```).)+^`{3}"
+detection_regex = "(?s)^`{3}[^\n`]{0,7}\n(?:(?!```).)+^(?:(?!```).)+^`{3}" 
