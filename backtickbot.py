@@ -38,7 +38,7 @@ def gen_old_webpage(comment_html: str, comment_id):
     with open("data/comment_template.html", "r") as f:
         template = f.read()
     template = template.replace("<body></body>", f"<body>{comment_html}</body>")
-    with open(Path(os.environ["PREVIEW_STORAGE_URL"]) / (comment_id + ".html"), "w") as f:
+    with open(Path(os.environ["SERVER_STORAGE_LOCATION"]) / (comment_id + ".html"), "w") as f:
         f.write(template)
 
 def capture_preview(preview_url: str, comment_id: str):
