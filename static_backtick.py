@@ -50,8 +50,7 @@ sub_blacklist = [
     "crucibleplaybook",
     "cassetteculture",
     "italy_SS",
-    "DimmiOuija",
-    "badcode"
+    "DimmiOuija"
 ]
 
 new_reddit_codeblock_url = "https://stalas.alm.lt/files/new-reddit-codeblock.png"
