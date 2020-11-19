@@ -60,7 +60,7 @@ response = """\
 Hello, {username}: code blocks using backticks (\`\`\`) don't work on all versions of Reddit!
 Some users see [this]({incorrect_screenshot}) / [this]({incorrect_link}) instead.
 
-To fix this, you need to start every line in your code block with at least four spaces. It's a bit annoying, but means your code blocks are properly formatted for everyone.
+To fix this, indent every line with **4 spaces** instead. It's a bit annoying, but then your code blocks are properly formatted for everyone.
 An easy way to do this is to use the code-block button in the editor: {codeblock_url}. If it's not working, try switching to the fancy-pants editor and back again.
 
 [Comment with formatting fixed for old.reddit.com users]({fixed_url})
