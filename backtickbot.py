@@ -177,7 +177,7 @@ def main(subreddit: praw.models.Subreddit, reddit: praw.Reddit, logger, responde
 
                 # The post is what we will link to users so that they will know how the comment is
                 converted = reddit.subreddit(os.environ["CONVERSIONS_SUBREDDIT"]).submit(
-                    title=f"https://reddit.com{comment.permalink}",
+                    title=f"https://np.reddit.com{comment.permalink}",
                     selftext=convert_text_to_correct_codeblocks(
                         static_backtick.detection_regex,
                         comment.body
@@ -193,7 +193,7 @@ def main(subreddit: praw.models.Subreddit, reddit: praw.Reddit, logger, responde
                         "Backtick format allert",
                         static_backtick.response.format(
                             username=escape_username(comment.author.name),
-                            fixed_url=f"https://reddit.com{converted.permalink}",
+                            fixed_url=f"https://np.reddit.com{converted.permalink}",
                             incorrect_screenshot=f"{os.environ['PREVIEW_STORAGE_URL']}{comment.id}{'.png'}",
                             incorrect_link=f"{os.environ['PREVIEW_STORAGE_URL']}{comment.id}{'.html'}",
                             codeblock_url=static_backtick.new_reddit_codeblock_url,
@@ -204,7 +204,7 @@ def main(subreddit: praw.models.Subreddit, reddit: praw.Reddit, logger, responde
                     comment.reply(
                         static_backtick.response.format(
                             username=escape_username(comment.author.name),
-                            fixed_url=f"https://reddit.com{converted.permalink}",
+                            fixed_url=f"https://np.reddit.com{converted.permalink}",
                             incorrect_screenshot=f"{os.environ['PREVIEW_STORAGE_URL']}{comment.id}{'.png'}",
                             incorrect_link=f"{os.environ['PREVIEW_STORAGE_URL']}{comment.id}{'.html'}",
                             codeblock_url=static_backtick.new_reddit_codeblock_url,
