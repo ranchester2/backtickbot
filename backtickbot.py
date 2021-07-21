@@ -228,15 +228,16 @@ if __name__ == "__main__":
 
     shutil.copy2("data/comment_template.css", os.environ["SERVER_STORAGE_LOCATION"])
 
-    formatter = logging.Formatter("%(asctime)s %(message)s")
-    filehandler = logging.FileHandler(os.environ["LOG_FILE"])
-    filehandler.setFormatter(formatter)
-    printhandler = logging.StreamHandler()
-    printhandler.setFormatter(formatter)
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s %(message)s',
+        handlers=[
+            logging.FileHandler(os.environ["LOG_FILE"]),
+            logging.StreamHandler()
+        ]
+    )
 
     logger = logging.getLogger("backtickbot")
-    logger.addHandler(filehandler)
-    logger.addHandler(printhandler)
     logger.info("startng...")
 
     with open(static_backtick.responded_comments_file, 'r') as f:
