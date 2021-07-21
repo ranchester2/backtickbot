@@ -1,7 +1,6 @@
 FROM debian:buster
 
-RUN apt-get update
-RUN apt-get -y install python3-pip firefox-esr
+RUN apt-get update && apt-get -y install python3-pip firefox-esr
 
 WORKDIR /app
 COPY . /app
