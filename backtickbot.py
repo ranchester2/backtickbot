@@ -42,8 +42,11 @@ def gen_old_webpage(comment_html: str, comment_id):
     with open(Path(os.environ["SERVER_STORAGE_LOCATION"]) / (comment_id + ".html"), "w") as f:
         f.write(template)
 
+
 def capture_preview(preview_url: str, comment_id: str):
-    os.system(f"firefox-esr --screenshot /var/www/backformat/{comment_id}.png {preview_url} && chmod 755 /var/www/backformat/{comment_id}.png")
+    os.system(
+        f"firefox-esr --screenshot {os.environ['SERVER_STORAGE_LOCATION']}/{comment_id}.png {preview_url} && chmod 755 {os.environ['SERVER_STORAGE_LOCATION']}/{comment_id}.png"
+    )
 
 
 def convert_text_to_correct_codeblocks(regex: str, text: str) -> str:
