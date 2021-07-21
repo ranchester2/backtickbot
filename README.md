@@ -4,6 +4,7 @@ A crappy bot that informs about backtick codeblock syntax
 ### Inspiration
 Saw that a subreddit had a automoderator informing of this.
 ### How to run?
+
 Create a folder called `runtime`
 and in it put:
 
@@ -11,8 +12,11 @@ and in it put:
 * `responses.json` - content should be `[]`
 * `optout.json` - content should be `[]`
 
-Install systemd service located in data/, setup user, etc, start it.
-Or just install requirements.txt and run backtickbot.py
+Install requirements.txt and run backtickbot.py
+
+There is also a terrible dockerfile setup, so you can use that.
+But make sure to have a config volume to `/app/secrets`, a data volume
+at `/app/runtime` and bind mount the webserver directory to `/app/webdata`
 
 You also need a .env file in secrets/.env
 
