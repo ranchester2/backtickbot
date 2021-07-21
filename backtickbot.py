@@ -3,6 +3,7 @@ import json
 from dotenv import load_dotenv
 from pathlib import Path
 import os
+import shutil
 import sys
 import logging
 import static_backtick
@@ -224,6 +225,9 @@ def main(subreddit: praw.models.Subreddit, reddit: praw.Reddit, logger, responde
 if __name__ == "__main__":
     env_path = Path('.') / 'secrets' / '.env'
     load_dotenv(dotenv_path=env_path)
+
+    shutil.copy2("data/comment_template.css", os.environ["SERVER_STORAGE_LOCATION"])
+    shutil.copy2("data/coment_template.html", os.environ["SERVER_STORAGE_LOCATION"])
 
     logging.basicConfig(
         level=logging.INFO,
