@@ -227,7 +227,6 @@ if __name__ == "__main__":
     load_dotenv(dotenv_path=env_path)
 
     shutil.copy2("data/comment_template.css", os.environ["SERVER_STORAGE_LOCATION"])
-    shutil.copy2("data/coment_template.html", os.environ["SERVER_STORAGE_LOCATION"])
 
     logging.basicConfig(
         level=logging.INFO,
