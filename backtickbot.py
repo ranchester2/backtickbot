@@ -3,6 +3,7 @@ import json
 from dotenv import load_dotenv
 from pathlib import Path
 import os
+import sys
 import logging
 import static_backtick
 import re
@@ -222,9 +223,12 @@ if __name__ == "__main__":
     load_dotenv(dotenv_path=env_path)
 
     logging.basicConfig(
-        filename=os.environ["LOG_FILE"],
         level=logging.INFO,
-        format='%(asctime)s %(message)s'
+        format='%(asctime)s %(message)s',
+        handlers=[
+            logging.FileHandler(os.environ["LOG_FILE"]),
+            logging.StreamHandler()
+        ]
     )
 
     logger = logging.getLogger("backtickbot")
